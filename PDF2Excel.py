@@ -32,7 +32,7 @@ class MyWindow(QMainWindow):
       self.lblInstruction.setWordWrap(True)
 
       self.lblHyperlink = QtWidgets.QLabel(self)
-      self.lblHyperlink.setText("2. Use <a href=''>VBA Text2Column</a> to coerce string into general format for the produced Excel file.")
+      self.lblHyperlink.setText("2. Use <a href='https://github.com/noworneverev/PDF2Excel/releases/download/1.0.0/Text2Column.xlam'>VBA Text2Column</a> to coerce string into general format for the produced Excel file.")
       self.lblHyperlink.move(50,40)
       self.lblHyperlink.resize(500, 100)
       self.lblHyperlink.setOpenExternalLinks(True)
