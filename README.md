@@ -4,7 +4,7 @@ Extract PDF files' table and save them into separate Excel(.xlsx) files.
 
 ## Installing
 
-Executable file: [PDF2Excel.zip](https://github.com/noworneverev/PDF2Excel/releases/download/1.0.0/PDF2Excel.exe)  
+Executable file: [PDF2Excel.exe](https://github.com/noworneverev/PDF2Excel/releases/download/1.0.0/PDF2Excel.exe)  
 Supporting VBA Add-in: [Text2Column.xlam](https://github.com/noworneverev/PDF2Excel/releases/download/1.0.0/Text2Column.xlam)(which coerces string into general format for the produced Excel file.)
 
 ## Built With
@@ -13,7 +13,7 @@ Supporting VBA Add-in: [Text2Column.xlam](https://github.com/noworneverev/PDF2Ex
 * [Pandas](https://github.com/pandas-dev/pandas) - Used to generate Excel files
 * [PyQt5](https://pypi.org/project/PyQt5/) - Used to build the interface
 
-## Authors
+## Author
 
 * **Mike Y. Liao** - [noworneverev](https://github.com/noworneverev)
 
