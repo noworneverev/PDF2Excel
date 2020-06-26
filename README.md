@@ -1,6 +1,6 @@
 # PDF2Excel
 
-Extract PDF files' table and save them into separate Excel(.xlsx) files.
+Extract tables from PDF files and save them into separate Excel(.xlsx) files.
 
 ## Installing
 
