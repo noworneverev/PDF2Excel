@@ -5,7 +5,7 @@ from tkinter import filedialog
 import os
 from os import listdir
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QPushButton, QComboBox, QLabel, QGridLayout, QSizePolicy, QWidget
 import sys
 
 class MyWindow(QMainWindow):
@@ -17,7 +17,7 @@ class MyWindow(QMainWindow):
       self.ConvertPDFtoExcel()
 
   def initUI(self):
-      self.setFixedSize(600, 280)
+      self.setFixedSize(600, 350)
       self.setWindowTitle("PDF2Excel")
       icon = QtGui.QIcon()
       icon.addPixmap(QtGui.QPixmap("accoding.jpg"), QtGui.QIcon.Selected, QtGui.QIcon.On)
@@ -25,30 +25,62 @@ class MyWindow(QMainWindow):
       self.setWindowIcon(icon)
       self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
 
-      self.lblInstruction = QtWidgets.QLabel(self)
-      self.lblInstruction.setText("1. The program will extract only tables from PDF files, in other words, it'll ignore text paragraphs.")
-      self.lblInstruction.move(50,0)
-      self.lblInstruction.resize(500, 100)
-      self.lblInstruction.setWordWrap(True)
+      wid = QWidget(self)
+      self.setCentralWidget(wid)
+      layout = QGridLayout()
+      wid.setLayout(layout)
 
-      self.lblHyperlink = QtWidgets.QLabel(self)
+      self.lblInstruction = QLabel(self)
+      self.lblInstruction.setText("1. The program will extract only tables from PDF files, in other words, it'll ignore text paragraphs.")
+      self.lblInstruction.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+      self.lblInstruction.setWordWrap(True)
+      
+      self.lblHyperlink = QLabel(self)
       self.lblHyperlink.setText("2. Use <a href='https://github.com/noworneverev/PDF2Excel/releases/download/1.0.0/Text2Column.xlam'>VBA Text2Column</a> to coerce string into general format for the produced Excel file.")
-      self.lblHyperlink.move(50,40)
-      self.lblHyperlink.resize(500, 100)
       self.lblHyperlink.setOpenExternalLinks(True)
       self.lblHyperlink.setWordWrap(True)
 
-      self.lblAuthor = QtWidgets.QLabel(self)
-      self.lblAuthor.setText("Created by Mike Y. Liao [<a href='mailto:n9102125@gmail.com'>n9102125@gmail.com</a>]")
-      self.lblAuthor.move(120,200)
-      self.lblAuthor.resize(600, 100)
-      self.lblAuthor.setOpenExternalLinks(True)
+      self.lblStrategy = QLabel(self)
+      myFont=QtGui.QFont()
+      myFont.setBold(True)
+      self.lblStrategy.setFont(myFont)
+      self.lblStrategy.setText("Table-extraction strategy:")
 
+      self.lblVerticalStrategy = QLabel(self)
+      self.lblVerticalStrategy.setText("    Vertical Strategy")
+
+      self.lblHorizontalStrategy = QLabel(self)
+      self.lblHorizontalStrategy.setText("    Horizontal Strategy")
+      self.lblHorizontalStrategy.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+      self.cboVerticalStrategy = QComboBox(self)
+      self.cboVerticalStrategy.addItems(["lines", "lines_strict", "text"])
+      
+      self.cboHorizontalStrategy = QComboBox(self)
+      self.cboHorizontalStrategy.addItems(["lines", "lines_strict", "text"])
+      
       self.btnConvert = QPushButton(self)
       self.btnConvert.setText("Select a folder where PDF files located")
-      self.btnConvert.move(50, 120)
-      self.btnConvert.resize(500,100)
+      self.btnConvert.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
       self.btnConvert.clicked.connect(self.button_clicked)
+
+      self.lblAuthor = QLabel(self)
+      self.lblAuthor.setText("Created by Mike Y. Liao [<a href='mailto:n9102125@gmail.com'>n9102125@gmail.com</a>]")
+      self.lblAuthor.setAlignment(QtCore.Qt.AlignCenter)
+      self.lblAuthor.setOpenExternalLinks(True)
+
+      layout.addWidget(self.lblInstruction,0,0,1,0,QtCore.Qt.AlignVCenter)
+      layout.addWidget(self.lblHyperlink,1,0,1,0,QtCore.Qt.AlignVCenter)
+      layout.addWidget(self.lblStrategy,3,0)
+      layout.addWidget(self.lblVerticalStrategy,4,0)
+      layout.addWidget(self.lblHorizontalStrategy,5,0)
+      layout.addWidget(self.cboVerticalStrategy,4,1)
+      layout.addWidget(self.cboHorizontalStrategy,5,1)
+      layout.addWidget(self.btnConvert,6,0,1,0)
+      layout.addWidget(self.lblAuthor,8,0,1,0)
+
+      layout.setContentsMargins(20,20,20,20)
+      layout.setRowMinimumHeight(2,10)
       
 
   def ConvertPDFtoExcel(self):
@@ -98,17 +130,22 @@ def PDFsToExcels(self, dirPath):
   filesFullPath = list_filesFullPath(dirPath, 'pdf')
   if len(filesFullPath) > 0:
     for f in filesFullPath:
-      PDFToExcel(f)
+      PDFToExcel(self, f)
     return True
   else:
     return False
 
-def PDFToExcel(filesPath):
+def PDFToExcel(self, filesPath):
   with pdfplumber.open(filesPath) as pdf:
       writer = pd.ExcelWriter(f'{filesPath.replace(".pdf", "")}.xlsx', engine='xlsxwriter')
       i = 1
+      table_settings = {
+        "vertical_strategy": self.cboVerticalStrategy.currentText(),
+        "horizontal_strategy": self.cboHorizontalStrategy.currentText()
+      }
       for page in pdf.pages:
-        tables = page.find_tables()        
+        # tables = page.find_tables()     
+        tables = page.find_tables(table_settings)     
         if len(tables) > 0:
           j = 0
           for j in range(len(tables)):
