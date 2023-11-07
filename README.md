@@ -9,9 +9,9 @@ Supporting VBA Add-in: [Text2Column.xlam](https://github.com/noworneverev/PDF2Ex
 
 ## Built With
 
-* [PDFPlumber](https://github.com/jsvine/pdfplumber) - The converting framework used
-* [Pandas](https://github.com/pandas-dev/pandas) - Used to generate Excel files
-* [PyQt5](https://pypi.org/project/PyQt5/) - Used to build the interface
+* [PDFPlumber](https://github.com/jsvine/pdfplumber) - The converting framework used (pip install pdfplumber)
+* [Pandas](https://github.com/pandas-dev/pandas) - Used to generate Excel files (pip install pandas)
+* [PyQt5](https://pypi.org/project/PyQt5/) - Used to build the interface (pip install pyqt5)
 
 ## Author
 
